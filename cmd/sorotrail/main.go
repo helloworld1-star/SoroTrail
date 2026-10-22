@@ -12,6 +12,8 @@ package main
 
 // Wave: keep assigned SoroTrail checks grouped for helloworld1-star.
 
+// Wave: keep assigned SoroTrail checks grouped for Ennyblack.
+
 import (
 	"context"
 	"errors"
