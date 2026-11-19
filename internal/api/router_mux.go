@@ -70,10 +70,13 @@ func (m *routeMux) Connect(pattern string, handler http.HandlerFunc) {
 	m.register(http.MethodConnect, pattern, handler)
 }
 
+// Trace registers a handler for HTTP TRACE requests at pattern.
 func (m *routeMux) Trace(pattern string, handler http.HandlerFunc) {
 	m.register(http.MethodTrace, pattern, handler)
 }
 
+// Method registers a handler for the given HTTP method and pattern.
+// It panics if the same method and pattern have already been registered.
 func (m *routeMux) Method(method, pattern string, handler http.Handler) {
 	m.register(method, pattern, handler)
 }
@@ -86,6 +89,8 @@ func (m *routeMux) Handle(pattern string, handler http.Handler) {
 	m.Router.Handle(pattern, handler)
 }
 
+// With returns a route mux that applies middlewares to routes registered on it
+// and shares the duplicate-registration set with its parent.
 func (m *routeMux) With(middlewares ...func(http.Handler) http.Handler) chi.Router {
 	return &routeMux{
 		Router:     m.Router.With(middlewares...),
@@ -93,6 +98,8 @@ func (m *routeMux) With(middlewares ...func(http.Handler) http.Handler) chi.Rout
 	}
 }
 
+// Group runs fn with a router that shares the registration set, so routes
+// registered inside the group are covered by duplicate-route detection.
 func (m *routeMux) Group(fn func(r chi.Router)) chi.Router {
 	im := m.With()
 	if fn != nil {
